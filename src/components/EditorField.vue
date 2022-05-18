@@ -2,7 +2,7 @@
     <StylePanel @bold="format('bold')" @italic="format('italic')" @list="format('insertunorderedlist')" @list-ol="format('insertorderedlist')" @font-size="textSize" @font-name="font"
     @text-color="textColor" @back-color="backColor" @align-left="format('justifyLeft')" @align-center="format('justifyCenter')" @align-right="format('justifyRight')" 
     @subscript="format('subscript')" @superscript="format('superscript')" @link="link" @unlink="format('unlink')" @underline="format('underline')"
-    @save="saveDocument()" @image="loadImage()" />
+    @save="saveDocument()" @image="loadImage()" @load="loadDocument()" />
     <div class="editorfield" ref="editorfield" :insert="true" contenteditable="true" v-on:keydown="keyPress($event)"
     spellcheck="false"> 
     </div>
@@ -95,6 +95,42 @@ export default {
     }
     
     document.body.removeChild(downloadLink);
+    },
+
+    loadDocument(){
+        let input = document.createElement("input")
+        let editorfield = this.$refs.editorfield
+
+        document.body.appendChild(input)
+
+        input.setAttribute("type", "file")
+
+        input.click()
+
+        input.addEventListener('change', () => {
+
+        let files = input.files
+
+        const file = files[0]
+
+        let reader = new FileReader()
+ 
+        reader.onload = (event) => {
+        const file = event.target.result;
+
+        editorfield.innerHTML = file
+ 
+        const lines = file.split(/\r\n|\n/);
+        editorfield.value = lines.join('\n');
+ 
+        };
+ 
+        reader.onerror = (event) => alert(event.target.error.name);
+ 
+        reader.readAsText(file);
+
+        })
+        document.body.removeChild(input)
     },
 
     delete(what){
@@ -221,6 +257,10 @@ export default {
 
                         case "image":
                         this.loadImage()
+                        break;
+
+                        case "dl":
+                        this.loadDocument()
                         break;
 
                         default:
