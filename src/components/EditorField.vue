@@ -6,21 +6,25 @@
     <div class="editorfield" ref="editorfield" :insert="true" contenteditable="true" v-on:keydown="keyPress($event)"
     spellcheck="false"> 
     </div>
+    <BottomPanel :insert ="insert" :fileName="fileName" />
 </template>
 
 <script>
 import StylePanel from '../components/StylePanel.vue'
+import BottomPanel from '../components/BottomPanel.vue'
 
 export default {
     name: 'EditorField',
 
     components:{
-        StylePanel
+        StylePanel,
+        BottomPanel
     },
 
     data(){
         return{
-            insert: true
+            insert: true,
+            fileName: "New document"
         }
     },
 
@@ -95,6 +99,7 @@ export default {
     }
     
     document.body.removeChild(downloadLink);
+    this.fileName = filename
     },
 
     loadDocument(){
@@ -112,6 +117,8 @@ export default {
         let files = input.files
 
         const file = files[0]
+
+        this.fileName = file.name
 
         let reader = new FileReader()
  
@@ -144,7 +151,6 @@ export default {
                 switch(e.keyCode){
                     case 73: 
                     e.preventDefault()
-                    alert("Insert mode")
                     this.insert = false
                     break;
 
@@ -253,6 +259,7 @@ export default {
                         case "qa":
                         let what = "all"
                         this.delete(what)
+                        this.fileName = "New document"
                         break;
 
                         case "image":
@@ -285,7 +292,6 @@ export default {
             }
             else if (this.insert == false){
                 if (e.keyCode == 27){
-                    alert("Normal mode")
                     this.insert = true
                 }
             }
@@ -311,8 +317,7 @@ export default {
         document.execCommand("backColor", false, backcolor)
     },
 
-    link(){
-        let url = prompt("Write the URL here:")
+    link(){        alert(file.name)
         if (url == null || url == ""){
             alert("No url was set")
         }
@@ -428,7 +433,7 @@ export default {
         outline: none;
         border: 2px solid black;
         width: 1250px;
-        height: 1000px;
+        height: 450px;
         word-wrap: break-word;
         resize: vertical;
         overflow: auto;
