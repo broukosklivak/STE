@@ -30,7 +30,10 @@ export default {
 
     mounted:function(){
         this.localStorageLoad()
-        console.log(this.$refs.editorfield.innerHTML)
+        if (this.fileName == null){
+            this.fileName = "New document"
+        }
+        this.$emit('insert', this.insert)
     },
 
     methods: {
@@ -179,6 +182,7 @@ export default {
                     case 73: 
                     e.preventDefault()
                     this.insert = false
+                    this.$emit('insert', this.insert)
                     break;
 
                     case 72:
@@ -198,110 +202,7 @@ export default {
 
                     case 9:
                     e.preventDefault()
-                    let command = prompt("Write the command here:")
-                    switch(command){
-                        case "bold":
-                        this.format('bold')
-                        break;
-
-                        case "italic":
-                        this.format('italic')
-                        break;
-                    
-                        case "list":
-                        this.format('insertunorderedlist')
-                        break;
-
-                        case "textsize":
-                        let size = prompt("Write the text size here (1-7):")
-                        if (size < 1 || size > 7){
-                            alert("This is not an option!")
-                        }
-                        else{
-                            this.textSize(size)
-                        }
-                        break;
-
-                        case "font":
-                        let fontName = prompt("Write the font here (Arial, Helvetica, Times New Roman, Courier New, Archivo Narrow, Roboto):")
-                        if (fontName == "Arial" || fontName == "Helvetica" || fontName == "Times New Roman" || fontName == "Courier New" || fontName == "Archivo Narrow" || 
-                        fontName == "Roboto"){
-                            this.font(fontName)
-                        }
-                        else{
-                            alert("This is not an option!")
-                        }
-                        break;
-
-                        case "listol":
-                        this.format('insertorderedlist')
-                        break;
-
-                        case "textcolor":
-                        let colorname = prompt("Write the color here (Yellow, Green, Blue, Violet, Red, Orange, Black, Gray, Brown, White):")
-                        this.colorSwitch(colorname, true)
-                        break;
-
-                        case "backcolor":
-                        let backcolorname = prompt("Write the color here (Yellow, Green, Blue, Violet, Red, Orange, Black, Gray, Brown, White):")
-                        this.colorSwitch(backcolorname, false)
-                        break;
-
-                        case "alignleft":
-                        this.format('justifyLeft')
-                        break;
-
-                        case "aligncenter":
-                        this.format('justifyCenter')
-                        break;
-
-                        case "alignright":
-                        this.format('justifyRight')
-                        break;
-
-                        case "subscript":
-                        this.format('subscript')
-                        break;
-
-                        case "superscript":
-                        this.format('superscript')
-                        break;
-
-                        case "link":
-                        this.link()
-                        break;
-
-                        case "unlink":
-                        this.format('unlink')
-                        break;
-
-                        case "underline":
-                        this.format('underline')
-                        break;
-
-                        case "wq":
-                        this.saveDocument()
-                        break;
-
-                        case "qa":
-                        let what = "all"
-                        this.delete(what)
-                        this.fileName = "New document"
-                        window.localStorage.clear()
-                        this.localStorageSave()
-                        break;
-
-                        case "image":
-                        this.loadImage()
-                        break;
-
-                        case "dl":
-                        this.loadDocument()
-                        break;
-
-                        default:
-                        alert("This is not a command!")
-                    }
+                    break;
 
                     case 37:
                     break;
@@ -315,6 +216,9 @@ export default {
                     case 40:
                     break;
 
+                    case 116:
+                    break;
+
                     default: 
                     e.preventDefault()
                 }
@@ -323,6 +227,7 @@ export default {
                 this.localStorageSave()
                 if (e.keyCode == 27){
                     this.insert = true
+                    this.$emit('insert', this.insert)
                 }
             }
         },
@@ -468,7 +373,115 @@ export default {
         let field = JSON.parse(window.localStorage.getItem('field'))
         this.$refs.editorfield.innerHTML = field
         this.fileName = JSON.parse(window.localStorage.getItem('name'))
-    },  }
+    },
+    
+    commands(){
+        let command = prompt("Write the command here:")
+                    switch(command){
+                        case "bold":
+                        this.format('bold')
+                        break;
+
+                        case "italic":
+                        this.format('italic')
+                        break;
+                    
+                        case "list":
+                        this.format('insertunorderedlist')
+                        break;
+
+                        case "textsize":
+                        let size = prompt("Write the text size here (1-7):")
+                        if (size < 1 || size > 7){
+                            alert("This is not an option!")
+                        }
+                        else{
+                            this.textSize(size)
+                        }
+                        break;
+
+                        case "font":
+                        let fontName = prompt("Write the font here (Arial, Helvetica, Times New Roman, Courier New, Archivo Narrow, Roboto):")
+                        if (fontName == "Arial" || fontName == "Helvetica" || fontName == "Times New Roman" || fontName == "Courier New" || fontName == "Archivo Narrow" || 
+                        fontName == "Roboto"){
+                            this.font(fontName)
+                        }
+                        else{
+                            alert("This is not an option!")
+                        }
+                        break;
+
+                        case "listol":
+                        this.format('insertorderedlist')
+                        break;
+
+                        case "textcolor":
+                        let colorname = prompt("Write the color here (Yellow, Green, Blue, Violet, Red, Orange, Black, Gray, Brown, White):")
+                        this.colorSwitch(colorname, true)
+                        break;
+
+                        case "backcolor":
+                        let backcolorname = prompt("Write the color here (Yellow, Green, Blue, Violet, Red, Orange, Black, Gray, Brown, White):")
+                        this.colorSwitch(backcolorname, false)
+                        break;
+
+                        case "alignleft":
+                        this.format('justifyLeft')
+                        break;
+
+                        case "aligncenter":
+                        this.format('justifyCenter')
+                        break;
+
+                        case "alignright":
+                        this.format('justifyRight')
+                        break;
+
+                        case "subscript":
+                        this.format('subscript')
+                        break;
+
+                        case "superscript":
+                        this.format('superscript')
+                        break;
+
+                        case "link":
+                        this.link()
+                        break;
+
+                        case "unlink":
+                        this.format('unlink')
+                        break;
+
+                        case "underline":
+                        this.format('underline')
+                        break;
+
+                        case "wq":
+                        this.saveDocument()
+                        break;
+
+                        case "qa":
+                        let what = "all"
+                        this.delete(what)
+                        this.fileName = "New document"
+                        window.localStorage.clear()
+                        this.localStorageSave()
+                        break;
+
+                        case "image":
+                        this.loadImage()
+                        break;
+
+                        case "dl":
+                        this.loadDocument()
+                        break;
+
+                        default:
+                        alert("This is not a command!")
+                    }
+    }
+    }
     }
 </script>
 

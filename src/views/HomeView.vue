@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
+  <div class="home"  v-on:keydown="command($event)">
     <Header title="Simple text editor" />
-    <EditorField />
+    <EditorField ref="editorfield" @insert="insert"/>
   </div>
 </template>
 
@@ -14,6 +14,28 @@ export default {
   components: {
     EditorField,
     Header,
+  },
+
+  data(){
+    return{
+      insertvar: true
+    }
+  },
+
+  methods: {
+    command(e){ 
+      if (e.keyCode == 9){
+        if (this.insertvar == true){
+          e.preventDefault()
+          this.$refs.editorfield.commands()
+        }
+        else{}
+      }
+    },
+
+    insert(value){
+      this.insertvar = value
+    }
   }
 }
 </script>
