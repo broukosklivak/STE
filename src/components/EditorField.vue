@@ -28,6 +28,11 @@ export default {
         }
     },
 
+    mounted:function(){
+        this.localStorageLoad()
+        console.log(this.$refs.editorfield.innerHTML)
+    },
+
     methods: {
     moveCaret(win, charCount) {
     var sel;
@@ -58,6 +63,7 @@ export default {
     }
     img.style.maxWidth = "100%"
         }
+    this.localStorageSave()
     },
 
     saveDocument(){
@@ -73,12 +79,26 @@ export default {
     var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
     
     // Specify file name
-    let nameprompt = prompt("Please enter file name")
+    let nameprompt
+
+    if (this.fileName == "New document"){
+        nameprompt = prompt("Please enter file name")
     if (nameprompt == null || nameprompt == ""){
         nameprompt = "Document"
     }
+    }
+    else{
+        nameprompt = this.fileName
+    }
 
-    let filename = nameprompt+'.doc'
+    let filename
+
+        if (nameprompt == this.fileName){
+            filename = nameprompt
+        }
+        else{
+            filename = nameprompt+'.doc'
+        }
     
     // Create download link element
     var downloadLink = document.createElement("a");
@@ -96,15 +116,17 @@ export default {
         
         //triggering the function
         downloadLink.click();
+        this.fileName = filename
     }
     
     document.body.removeChild(downloadLink);
-    this.fileName = filename
+    this.localStorageSave()
     },
 
     loadDocument(){
         let input = document.createElement("input")
         let editorfield = this.$refs.editorfield
+        var result
 
         document.body.appendChild(input)
 
@@ -118,7 +140,7 @@ export default {
 
         const file = files[0]
 
-        this.fileName = file.name
+        var fname = file.name
 
         let reader = new FileReader()
  
@@ -129,13 +151,18 @@ export default {
  
         const lines = file.split(/\r\n|\n/);
         editorfield.value = lines.join('\n');
+
+        result = reader.result
+
+        this.fileName = fname
+        this.localStorageSave()
+        console.log(JSON.parse(window.localStorage.getItem('field')))
  
         };
- 
+
         reader.onerror = (event) => alert(event.target.error.name);
  
         reader.readAsText(file);
-
         })
         document.body.removeChild(input)
     },
@@ -260,6 +287,8 @@ export default {
                         let what = "all"
                         this.delete(what)
                         this.fileName = "New document"
+                        window.localStorage.clear()
+                        this.localStorageSave()
                         break;
 
                         case "image":
@@ -291,6 +320,7 @@ export default {
                 }
             }
             else if (this.insert == false){
+                this.localStorageSave()
                 if (e.keyCode == 27){
                     this.insert = true
                 }
@@ -299,31 +329,38 @@ export default {
 
     format(command, value) {
     document.execCommand(command, false, value)
+    this.localStorageSave()
  },
     
     textSize(size){
         document.execCommand("fontSize", false, size)
+        this.localStorageSave()
     },
 
     font(fontName){
         document.execCommand("fontName", false, fontName)
+        this.localStorageSave()
     },
 
     textColor(textcolor){
         document.execCommand("foreColor", false, textcolor)
+        this.localStorageSave()
     },
 
     backColor(backcolor){
         document.execCommand("backColor", false, backcolor)
+        this.localStorageSave()
     },
 
-    link(){        alert(file.name)
+    link(){
+        let url = prompt("Please enter URL")
         if (url == null || url == ""){
             alert("No url was set")
         }
         else{
         this.format('createLink', url)
         }
+        this.localStorageSave()
     },
 
     colorSwitch(colorname, textcolor){
@@ -420,7 +457,18 @@ export default {
             this.backColor(colorcode)    
             }
     },
-       }
+
+    localStorageSave(){
+        let field = this.$refs.editorfield.innerHTML
+        window.localStorage.setItem('field', JSON.stringify(field))
+        window.localStorage.setItem('name', JSON.stringify(this.fileName))
+    },
+
+    localStorageLoad(){
+        let field = JSON.parse(window.localStorage.getItem('field'))
+        this.$refs.editorfield.innerHTML = field
+        this.fileName = JSON.parse(window.localStorage.getItem('name'))
+    },  }
     }
 </script>
 
