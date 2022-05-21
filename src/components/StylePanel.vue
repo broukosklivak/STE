@@ -50,6 +50,7 @@
     <span class="fa-solid fa-link" aria-hidden="true" @click="$emit('link')"></span>
     <span class="fa-solid fa-link-slash" aria-hidden="true" @click="$emit('unlink')"></span>
     <span class="fa-solid fa-image" aria-hidden="true" @click="$emit('image')"></span>
+    <span class="fa-solid fa-rotate-left" aria-hidden="true" @click="$emit('undo')"></span>
             <button class="save" @click="$emit('save')">Save file</button>
             <button @click="$emit('load')">Load file</button>
     </div>

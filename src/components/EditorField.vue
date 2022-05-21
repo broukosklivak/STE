@@ -2,7 +2,7 @@
     <StylePanel @bold="format('bold')" @italic="format('italic')" @list="format('insertunorderedlist')" @list-ol="format('insertorderedlist')" @font-size="textSize" @font-name="font"
     @text-color="textColor" @back-color="backColor" @align-left="format('justifyLeft')" @align-center="format('justifyCenter')" @align-right="format('justifyRight')" 
     @subscript="format('subscript')" @superscript="format('superscript')" @link="link" @unlink="format('unlink')" @underline="format('underline')"
-    @save="saveDocument()" @image="loadImage()" @load="loadDocument()" />
+    @save="saveDocument()" @image="loadImage()" @load="loadDocument()" @undo="format('undo')" />
     <div class="editorfield" ref="editorfield" :insert="true" contenteditable="true" v-on:keydown="keyPress($event)"
     spellcheck="false"> 
     </div>
@@ -178,6 +178,9 @@ export default {
 
         keyPress(e){
             if (this.insert == true){
+                if (e.ctrlKey && e.key === 'z') {
+                this.format('undo')
+                }
                 switch(e.keyCode){
                     case 73: 
                     e.preventDefault()
