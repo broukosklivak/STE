@@ -48,6 +48,12 @@ export default {
     color: black;
     display: flex;
     height: 24px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     }
 
     .bottompanel::after{

@@ -51,6 +51,7 @@
     <span class="fa-solid fa-link-slash" aria-hidden="true" @click="$emit('unlink')"></span>
     <span class="fa-solid fa-image" aria-hidden="true" @click="$emit('image')"></span>
     <span class="fa-solid fa-rotate-left" aria-hidden="true" @click="$emit('undo')"></span>
+    <span class="fa-solid fa-rotate-right" aria-hidden="true" @click="$emit('redo')"></span>
             <button class="save" @click="$emit('save')">Save file</button>
             <button @click="$emit('load')">Load file</button>
     </div>
@@ -82,6 +83,12 @@ export default {
     margin: auto;
     margin-bottom: 20px;
     color: black;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     }
 
     .stylepanel > span

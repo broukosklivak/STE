@@ -2,7 +2,8 @@
     <StylePanel @bold="format('bold')" @italic="format('italic')" @list="format('insertunorderedlist')" @list-ol="format('insertorderedlist')" @font-size="textSize" @font-name="font"
     @text-color="textColor" @back-color="backColor" @align-left="format('justifyLeft')" @align-center="format('justifyCenter')" @align-right="format('justifyRight')" 
     @subscript="format('subscript')" @superscript="format('superscript')" @link="link" @unlink="format('unlink')" @underline="format('underline')"
-    @save="saveDocument()" @image="loadImage()" @load="loadDocument()" @undo="format('undo')" />
+    @save="saveDocument()" @image="loadImage()" @load="loadDocument()" @undo="format('undo')" 
+    @redo="format('redo')" />
     <div class="editorfield" ref="editorfield" :insert="true" contenteditable="true" v-on:keydown="keyPress($event)"
     spellcheck="false"> 
     </div>
@@ -50,6 +51,7 @@ export default {
     },
 
     loadImage(){
+    this.$refs.editorfield.focus();
     var image = prompt ("Paste or type a link")
     if (image == null || image == ""){
             alert("No url was set")
@@ -159,7 +161,6 @@ export default {
 
         this.fileName = fname
         this.localStorageSave()
-        console.log(JSON.parse(window.localStorage.getItem('field')))
  
         };
 
@@ -180,6 +181,9 @@ export default {
             if (this.insert == true){
                 if (e.ctrlKey && e.key === 'z') {
                 this.format('undo')
+                }
+                else if (e.ctrlKey && e.shiftKey && e.key === 'z') {
+                this.format('redo')
                 }
                 switch(e.keyCode){
                     case 73: 
@@ -236,31 +240,37 @@ export default {
         },
 
     format(command, value) {
+    this.$refs.editorfield.focus();
     document.execCommand(command, false, value)
     this.localStorageSave()
  },
     
     textSize(size){
+        this.$refs.editorfield.focus();
         document.execCommand("fontSize", false, size)
         this.localStorageSave()
     },
 
     font(fontName){
+        this.$refs.editorfield.focus();
         document.execCommand("fontName", false, fontName)
         this.localStorageSave()
     },
 
     textColor(textcolor){
+        this.$refs.editorfield.focus();
         document.execCommand("foreColor", false, textcolor)
         this.localStorageSave()
     },
 
     backColor(backcolor){
+        this.$refs.editorfield.focus();
         document.execCommand("backColor", false, backcolor)
         this.localStorageSave()
     },
 
     link(){
+        this.$refs.editorfield.focus();
         let url = prompt("Please enter URL")
         if (url == null || url == ""){
             alert("No url was set")

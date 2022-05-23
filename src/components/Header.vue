@@ -24,6 +24,12 @@ export default {
         align-items: center;
         margin-left: 50px;
         margin-right: 50px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
   nav {
@@ -33,6 +39,12 @@ export default {
   a{
     text-decoration: none;
     color: black;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   a:hover{
