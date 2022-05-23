@@ -49,7 +49,11 @@
     <span class="fa-solid fa-superscript" aria-hidden="true" @click="$emit('superscript')" title="Or 'superscript' command"></span>
     <span class="fa-solid fa-link" aria-hidden="true" @click="$emit('link')" title="Or 'link' command"></span>
     <span class="fa-solid fa-link-slash" aria-hidden="true" @click="$emit('unlink')" title="Or 'unlink' command"></span>
-    <span class="fa-solid fa-image" aria-hidden="true" @click="$emit('image')" title="Or 'image' command"></span>
+    <span class="fa-solid fa-image" aria-hidden="true" @click="$emit('image', this.imagechoose)" title="Or 'image' command"></span>
+    <select v-model="imagechoose">
+        <option value="url" selected>URL</option>
+        <option value="file">File</option>
+    </select>
     <span class="fa-solid fa-rotate-left" aria-hidden="true" @click="$emit('undo')" title="Or 'CTRL+Z' shortcut"></span>
     <span class="fa-solid fa-rotate-right" aria-hidden="true" @click="$emit('redo')" title="Or 'CTRL+SHIFT+Z' shortcut"></span>
             <button class="save" @click="$emit('save')" title="Or 'wq' command">Save file</button>
@@ -66,7 +70,8 @@ export default {
             size: 3,
             fontName: "Archivo Narrow",
             textcolor: "Black",
-            backcolor: "White"
+            backcolor: "White",
+            imagechoose: "url"
         }
     }
 }
@@ -109,7 +114,7 @@ export default {
 
     .save
     {
-    margin-left: 400px;
+    margin-left: 350px;
     }
 
     .selectsize{

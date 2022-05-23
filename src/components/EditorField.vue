@@ -2,7 +2,7 @@
     <StylePanel @bold="format('bold')" @italic="format('italic')" @list="format('insertunorderedlist')" @list-ol="format('insertorderedlist')" @font-size="textSize" @font-name="font"
     @text-color="textColor" @back-color="backColor" @align-left="format('justifyLeft')" @align-center="format('justifyCenter')" @align-right="format('justifyRight')" 
     @subscript="format('subscript')" @superscript="format('superscript')" @link="link" @unlink="format('unlink')" @underline="format('underline')"
-    @save="saveDocument()" @image="loadImage()" @load="loadDocument()" @undo="format('undo')" 
+    @save="saveDocument()" @image="loadImage" @load="loadDocument()" @undo="format('undo')" 
     @redo="format('redo')" />
     <div class="editorfield" ref="editorfield" :insert="true" contenteditable="true" v-on:keydown="keyPress($event)"
     spellcheck="false"> 
@@ -51,7 +51,41 @@ export default {
     } 
     },
 
-    loadImage(){
+    loadImage(imagechoose){
+    if(imagechoose == "url"){
+        this.loadImageURL()
+    }
+    else if(imagechoose == "file"){
+        this.loadImageFile()
+    }
+    },
+
+    loadImageFile(){
+    this.$refs.editorfield.focus()
+     let input = document.createElement("input")
+        var result
+
+        document.body.appendChild(input)
+
+        input.setAttribute("type", "file")
+
+        input.click()
+        input.addEventListener('change', () => {
+
+        let files = input.files
+
+        const file = files[0]
+        let reader = new FileReader()
+        reader.addEventListener('load', (event) => {
+        result = reader.result;
+        document.execCommand("insertimage", false, result)
+        this.imageSize(result)
+        });
+        reader.readAsDataURL(file);
+        })
+    },
+
+    loadImageURL(){
     this.$refs.editorfield.focus();
     var image = prompt ("Paste or type a link")
     if (image == null || image == ""){
@@ -59,7 +93,11 @@ export default {
         }
         else{
     document.execCommand("insertimage", false, image)
+    this.imageSize(image)
+        }
+    },
 
+    imageSize(image){
     var img = document.querySelector("img[src='"+ image +"']")
     let width = prompt ("Please enter width of image (in px)")
     if (width == null || width == "")
@@ -68,7 +106,6 @@ export default {
     img.style.width = width + "px" 
     }
     img.style.maxWidth = "100%"
-        }
     this.localStorageSave()
     },
 
@@ -484,7 +521,17 @@ export default {
                         break;
 
                         case "image":
-                        this.loadImage()
+                        let imagechoose = prompt("Please enter source of image: (URL, File)")
+                        if(imagechoose == "URL"){
+                        imagechoose = "url"
+                        }
+                        else if(imagechoose == "File"){
+                        imagechoose = "file"
+                        }
+                        else{
+                        alert('This is not an option')
+                        }
+                        this.loadImage(imagechoose)
                         break;
 
                         case "dl":
