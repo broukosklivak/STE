@@ -35,6 +35,7 @@ export default {
             this.fileName = "New document"
         }
         this.$emit('insert', this.insert)
+        this.$refs.editorfield.focus();
     },
 
     methods: {
