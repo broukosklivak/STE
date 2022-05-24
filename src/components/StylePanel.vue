@@ -4,10 +4,10 @@
     <span class="fa fa-italic fa-fw" aria-hidden="true" @click="$emit('italic')" title="Or 'italic' command"></span>
     <span class="fa fa-list fa-fw" aria-hidden="true" @click="$emit('list')" title="Or 'list' command"></span>
     <span class="fa fa-list-ol" aria-hidden="true" @click="$emit('list-ol')" title="Or 'listol' command"></span>
-    <span class="fa-solid fa-text-height" aria-hidden="true" @click="$emit('font-size', this.size)" title="Or 'textsize' command"></span>
-    <input type="number" min="1" max="7" v-model="size" class="selectsize">
-    <span class="fa-solid fa-font" aria-hidden="true" @click="$emit('font-name', this.fontName)" title="Or 'font' command"></span>
-    <select v-model="fontName">
+    <i class="fa-solid fa-text-height" aria-hidden="true" title="Or 'textsize' command"></i>
+    <input type="number" min="1" max="7" v-model="size" @change="$emit('font-size', this.size)" class="selectsize">
+    <i class="fa-solid fa-font" aria-hidden="true" title="Or 'font' command"></i>
+    <select v-model="fontName" @change="$emit('font-name', this.fontName)">
         <option value="Arial">Arial</option>
         <option value="Helvetica">Helvetica</option>
         <option value="Times New Roman">Times New Roman</option>
@@ -15,8 +15,8 @@
         <option value="Archivo Narrow" selected>Archivo Narrow</option>
         <option value="Roboto">Roboto</option>
     </select>
-    <span class="fa-solid fa-brush" aria-hidden="true" @click="$emit('text-color', this.textcolor)" title="Or 'textcolor' command"></span>
-    <select v-model="textcolor">
+    <i class="fa-solid fa-brush" aria-hidden="true" title="Or 'textcolor' command"></i>
+    <select v-model="textcolor" @change="$emit('text-color', this.textcolor)" >
         <option value="#ffff00">Yellow</option>
         <option value="#008000">Green</option>
         <option value="#0000ff">Blue</option>
@@ -28,8 +28,8 @@
         <option value="#8b4513">Brown</option>
         <option value="#ffffff">White</option>
     </select>
-    <span class="fa-solid fa-fill" aria-hidden="true" @click="$emit('back-color', this.backcolor)" title="Or 'backcolor' command"></span>
-    <select v-model="backcolor">
+    <i class="fa-solid fa-fill" aria-hidden="true" title="Or 'backcolor' command"></i>
+    <select v-model="backcolor" @change="$emit('back-color', this.backcolor)" >
         <option value="#ffff00">Yellow</option>
         <option value="#008000">Green</option>
         <option value="#0000ff">Blue</option>
@@ -110,6 +110,11 @@ export default {
     .stylepanel > span:active
     {
     color: darkgray; 
+    }
+
+    .stylepanel > i
+    {
+    margin-left: 5px;
     }
 
     .save

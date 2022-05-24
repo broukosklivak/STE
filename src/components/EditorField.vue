@@ -5,7 +5,7 @@
     @save="saveDocument()" @image="loadImage" @load="loadDocument()" @undo="format('undo')" 
     @redo="format('redo')" />
     <div class="editorfield" ref="editorfield" :insert="true" contenteditable="true" v-on:keydown="keyPress($event)"
-    spellcheck="false"> 
+    spellcheck="false" @click="focusLastLine">
     </div>
     <BottomPanel :insert ="insert" :fileName="fileName" />
 </template>
@@ -25,7 +25,8 @@ export default {
     data(){
         return{
             insert: true,
-            fileName: "New document"
+            fileName: "New document",
+            line: '<div></div>'
         }
     },
 
@@ -35,7 +36,10 @@ export default {
             this.fileName = "New document"
         }
         this.$emit('insert', this.insert)
-        this.$refs.editorfield.focus();
+        if(this.$refs.editorfield.hasChildNodes()){
+            this.$refs.editorfield.childNodes[0].focus()
+        }
+        this.line = document.activeElement
     },
 
     methods: {
@@ -51,6 +55,29 @@ export default {
     } 
     },
 
+    focusLastLine() {
+    if(this.$refs.editorfield.hasChildNodes()){
+        if(document.activeElement.innerHTML == this.$refs.editorfield.innerHTML){
+            this.$refs.editorfield.lastChild.focus()
+            this.line = document.activeElement
+        }
+        else{
+            this.line = document.activeElement
+        }
+    }
+    else{
+    }
+    },
+
+    lines() {
+    var nodes = this.$refs.editorfield.childNodes
+    for(var i=0; i<nodes.length; i++) {
+         if (nodes[i].nodeName.toLowerCase() == 'div') {
+        nodes[i].setAttribute("tabindex", 0)
+         }
+    }
+    },
+
     loadImage(imagechoose){
     if(imagechoose == "url"){
         this.loadImageURL()
@@ -58,16 +85,18 @@ export default {
     else if(imagechoose == "file"){
         this.loadImageFile()
     }
+    this.localStorageSave()
     },
 
     loadImageFile(){
-    this.$refs.editorfield.focus()
+    this.line.focus()
      let input = document.createElement("input")
         var result
 
         document.body.appendChild(input)
 
         input.setAttribute("type", "file")
+        input.setAttribute("accept", "image/*")
 
         input.click()
         input.addEventListener('change', () => {
@@ -86,7 +115,7 @@ export default {
     },
 
     loadImageURL(){
-    this.$refs.editorfield.focus();
+    this.line.focus()
     var image = prompt ("Paste or type a link")
     if (image == null || image == ""){
             alert("No url was set")
@@ -174,6 +203,7 @@ export default {
         document.body.appendChild(input)
 
         input.setAttribute("type", "file")
+        input.setAttribute("accept", ".doc")
 
         input.click()
 
@@ -198,6 +228,7 @@ export default {
         result = reader.result
 
         this.fileName = fname
+        this.lines()
         this.localStorageSave()
  
         };
@@ -212,10 +243,38 @@ export default {
     delete(what){
         if (what == "all"){
             this.$refs.editorfield.innerHTML = ""
+            this.$refs.editorfield.focus()
+        }
+        else if (what == "line"){
+            var nodes = this.$refs.editorfield.childNodes
+            if(nodes.length == 1){
+            this.$refs.editorfield.innerHTML = "" 
+            }
+            else{
+            let line = document.activeElement
+            document.activeElement.previousSibling.focus()
+            this.$refs.editorfield.removeChild(line)
+            }
+            this.localStorageSave()
         }
     },
 
         keyPress(e){
+                if (e.keyCode == 38){
+                    if(document.activeElement.previousSibling == null){}
+                    else{
+                    document.activeElement.previousSibling.focus()
+                    this.line = document.activeElement  
+                    }
+                }
+                else if (e.keyCode == 40){
+                    if(document.activeElement.nextSibling == null){}
+                    else{
+                    document.activeElement.nextSibling.focus()
+                    this.line = document.activeElement
+                    }
+                }
+
             if (this.insert == true){
                 if (e.ctrlKey && e.key === 'z') {
                 this.format('undo')
@@ -243,6 +302,14 @@ export default {
                     case 88:
                     e.preventDefault()
                     this.format('forwardDelete')
+                    var previousLine = document.activeElement.previousSibling
+                    var x = new MutationObserver(function (e) {
+                    if (e[0].removedNodes){
+                    previousLine.focus();
+                    x.disconnect()
+                    }
+                    });
+                    x.observe(this.$refs.editorfield, { childList: true });
                     break;
 
                     case 9:
@@ -270,45 +337,63 @@ export default {
             }
             else if (this.insert == false){
                 this.localStorageSave()
-                if (e.keyCode == 27){
+                switch(e.keyCode){
+                    case 27:
                     this.insert = true
                     this.$emit('insert', this.insert)
+                    break;
+
+                    case 13:
+                    this.lines()
+                    this.$refs.editorfield.lastChild.focus()
+                    break;
+
+                    case 8:
+                    var previousLine = document.activeElement.previousSibling
+                    var x = new MutationObserver(function (e) {
+                    if (e[0].removedNodes){
+                    previousLine.focus();
+                    x.disconnect()
+                    }
+                    });
+                    x.observe(this.$refs.editorfield, { childList: true });
+                    break;
                 }
             }
         },
 
     format(command, value) {
-    this.$refs.editorfield.focus();
+    this.line.focus()
     document.execCommand(command, false, value)
     this.localStorageSave()
  },
     
     textSize(size){
-        this.$refs.editorfield.focus();
+        this.line.focus()
         document.execCommand("fontSize", false, size)
         this.localStorageSave()
     },
 
     font(fontName){
-        this.$refs.editorfield.focus();
+        this.line.focus()
         document.execCommand("fontName", false, fontName)
         this.localStorageSave()
     },
 
     textColor(textcolor){
-        this.$refs.editorfield.focus();
+        this.line.focus()
         document.execCommand("foreColor", false, textcolor)
         this.localStorageSave()
     },
 
     backColor(backcolor){
-        this.$refs.editorfield.focus();
+        this.line.focus()
         document.execCommand("backColor", false, backcolor)
         this.localStorageSave()
     },
 
     link(){
-        this.$refs.editorfield.focus();
+        this.line.focus()
         let url = prompt("Please enter URL")
         if (url == null || url == ""){
             alert("No url was set")
@@ -538,6 +623,10 @@ export default {
                         this.loadDocument()
                         break;
 
+                        case "dd":
+                        this.delete("line")
+                        break;
+
                         default:
                         alert("This is not a command!")
                     }
@@ -547,6 +636,7 @@ export default {
 </script>
 
 <style scoped>
+
     .editorfield{
         padding: 5px;
         display: block;
