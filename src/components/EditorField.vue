@@ -26,7 +26,7 @@ export default {
         return{
             insert: true,
             fileName: "New document",
-            line: '<div></div>'
+            line: null
         }
     },
 
@@ -39,20 +39,60 @@ export default {
         if(this.$refs.editorfield.hasChildNodes()){
             this.$refs.editorfield.childNodes[0].focus()
         }
+        this.lines() 
         this.line = document.activeElement
     },
 
     methods: {
-    moveCaret(win, charCount) {
-    var sel;
-    if (win.getSelection) {
-        sel = win.getSelection();
-        if (sel.rangeCount > 0) {
-            var textNode = sel.focusNode;
-            var newOffset = sel.focusOffset + charCount;
-            sel.collapse(textNode, Math.min(textNode.length, newOffset));
+    /*moveCaret(el, pos){
+
+    // Loop through all child nodes
+    for(var node of el.childNodes){
+        if(node.nodeType == 3){ // we have a text node
+            if(node.length >= pos){
+                // finally add our range
+            var sel;
+            if(el.getSelection()){
+                sel = el.getSelection()
+                if(sel.rangeCount > 0){
+                    var newOffset = sel.focusOffset + pos
+                    sel.collapse(node, Math.min(node.length, newOffset))
+                }
+            }
+            }
+    }
+    }
+        this.line.focus()
+    return pos; // needed because of recursion stuff
+},*/
+
+    arrow(keyCode){
+        if(keyCode == 38){
+            if(this.line.previousSibling == null){
+                this.line.focus()
+            }
+                    else{
+                    this.line.previousSibling.focus();
+                    this.line = document.activeElement
+                    }
         }
-    } 
+        else if(keyCode == 40){
+            if(this.line.nextSibling == null){
+                this.line.focus()
+            }
+                    else{
+                    this.line.nextSibling.focus();
+                    this.line = document.activeElement
+                    }
+        }
+        else if(keyCode == 37 || 38){
+            this.line.focus()
+        }
+    },
+
+    enter(){
+        this.lines()
+        this.$refs.editorfield.lastChild.click()
     },
 
     focusLastLine() {
@@ -255,24 +295,36 @@ export default {
             document.activeElement.previousSibling.focus()
             this.$refs.editorfield.removeChild(line)
             }
-            this.localStorageSave()
         }
+        else if(what == "word"){
+        var sel
+        if (window.getSelection && (sel = window.getSelection()).modify) {
+        sel.collapseToStart();
+        sel.modify("move", "backward", "word");
+        sel.modify("extend", "forward", "word"); 
+        this.format('forwardDelete')
+        this.line.focus()
+    }
+        }
+        this.localStorageSave()
     },
 
         keyPress(e){
                 if (e.keyCode == 38){
-                    if(document.activeElement.previousSibling == null){}
-                    else{
-                    document.activeElement.previousSibling.focus()
-                    this.line = document.activeElement  
-                    }
+                    setTimeout(this.arrow, 10, 38)
+                    this.line = document.activeElement
                 }
                 else if (e.keyCode == 40){
-                    if(document.activeElement.nextSibling == null){}
-                    else{
-                    document.activeElement.nextSibling.focus()
+                    setTimeout(this.arrow, 10, 40)
                     this.line = document.activeElement
-                    }
+                }
+                else if (e.keyCode == 37){
+                    setTimeout(this.arrow, 10, 37)
+                    this.line = document.activeElement
+                }
+                else if (e.keyCode == 39){
+                    setTimeout(this.arrow, 10, 39)
+                    this.line = document.activeElement
                 }
 
             if (this.insert == true){
@@ -291,12 +343,12 @@ export default {
 
                     case 72:
                     e.preventDefault() 
-                    this.moveCaret(window, -1)
+                    this.moveCaret(this.$refs.editorfield, -1)
                     break;
 
                     case 76:
                     e.preventDefault()
-                    this.moveCaret(window, +1)
+                    this.moveCaret(this.$refs.editorfield, +1)
                     break;
 
                     case 88:
@@ -344,8 +396,7 @@ export default {
                     break;
 
                     case 13:
-                    this.lines()
-                    this.$refs.editorfield.lastChild.focus()
+                    setTimeout(this.enter, 10)
                     break;
 
                     case 8:
@@ -508,6 +559,7 @@ export default {
     localStorageLoad(){
         let field = JSON.parse(window.localStorage.getItem('field'))
         this.$refs.editorfield.innerHTML = field
+        this.lines()
         this.fileName = JSON.parse(window.localStorage.getItem('name'))
     },
     
@@ -625,6 +677,10 @@ export default {
 
                         case "dd":
                         this.delete("line")
+                        break;
+
+                        case "dw":
+                        this.delete("word")
                         break;
 
                         default:
