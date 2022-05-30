@@ -1,3 +1,4 @@
+<!--Panel pod oknem editoru, který ukazuje zda-li je uživatel v normal nebo insert modu a název otevřeného dokumentu-->
 <template>
     <div class="bottompanel"> 
         <p class="insert" ref="insert"></p><p class="name" ref="name"></p>
@@ -8,22 +9,31 @@
 export default {
     name: 'BottomPanel',
 
-    props: { insert: Boolean,
-             fileName: String        
+    props: { 
+        //Proměnná kterou si bere component z nadřazeného componentu a je v ní zda-li je uživatel v normal nebo insert modu
+        insert: Boolean,
+        //Proměnná kterou si bere component z nadřazeného componentu a je v ní název otevřeného dokumentu 
+        fileName: String        
     },
 
+    /*Funkce která se spouští při načtení stránky, vezme si název dokument z proměnné fileName a použije ho v panelu
+    a spustí metodu insertShow*/
     mounted:function(){
         this.insertShow()
         this.$refs.name.innerHTML = this.fileName
     },
 
+    /*Funkce která se spouští při změně názvu dokumentu, vezme si název dokument z proměnné fileName a použije ho v 
+    panelu a spustí metodu insertShow*/
     updated:function(){
         this.insertShow()
         this.$refs.name.innerHTML = this.fileName
     },
 
     methods: {
-        insertShow:function(){
+
+        //Metoda která přepisuje insert/normal ukazatel v panelu pomocí hodnoty v proměnné insert
+        insertShow(){
             if (this.insert == true){
                 this.$refs.insert.innerHTML = "NORMAL"
             }

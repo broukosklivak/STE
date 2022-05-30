@@ -1,3 +1,5 @@
+<!--Panel který spouští funkce pro formátování textu. Po kliknutí na tlačítko, nebo vybrání hodnoty odešle informaci
+o stisknutí tlačítka do nadřazeného componentu-->
 <template>
     <div class="stylepanel">
     <span class="fa fa-bold fa-fw" aria-hidden="true" @click="$emit('bold')" title="Or 'bold' command"></span>
@@ -67,10 +69,15 @@ export default {
 
     data(){
         return{
+            //Proměnná pro velikost písma
             size: 3,
+            //Proměnná pro jméno fontu písma
             fontName: "Archivo Narrow",
+            //Proměnná pro barvu písma
             textcolor: "Black",
+            //Proměnná pro barvu zvýraznění
             backcolor: "White",
+            //Proměnná pro název zdroje obrázku
             imagechoose: "url"
         }
     }
@@ -119,7 +126,7 @@ export default {
 
     .save
     {
-    margin-left: 350px;
+    margin-left: 250px;
     }
 
     .selectsize{

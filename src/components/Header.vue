@@ -1,3 +1,4 @@
+<!--Component pro header-->
 <template>
     <header>
         <h1>{{ title }}</h1>
@@ -12,6 +13,7 @@
 export default {
     name: 'Header',
     props: {
+        //Proměnná která z každé nadřazené stránky bere title, díky kterému je na každé stránce header jiný
         title: String,
     }
 }

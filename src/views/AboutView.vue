@@ -1,9 +1,11 @@
+<!--Stránka About-->
 <template>
   
     <Header title="About" />
     <div class="about">
     <h1>Basic information</h1>
-    <p>This application is a simple text editor written in Vue.js. It uses VIM-like cursor movement and commands but it still can style text.</p>
+    <p>This application is a simple text editor written in Vue.js. It uses VIM-like commands but it still can style
+    text.</p>
     <h2>How to use the editor</h2>
     <p>All the functions of the editor will be described here, but you will learn how to use it better in the <router-link to="/tutor">tutorial</router-link></p>
     <ol>
@@ -14,20 +16,35 @@
         </p>
       </li>
       <li>
-        <h3>Moving the cursor (WIP)</h3>
-        <p>In normal mode move the cursor with the h, j, k, l, keys (h=← j=↓ k=↑ l=→) (so far only right and left movement works, so it is better to use the arrow keys to move the cursor).
-          In insert mode move the cursor with the arrow keys.
-        </p>
-      </li>
-      <li>
         <h3>Executing the commands</h3>
         <p>You can execute the command only in normal mode. Press the Tab key and write the command. Some commands need additional values, after you write the command editor will ask you
           for the additional value. Select value from the list and write it in the prompt (the value needs to be 100% accurate, otherwise the command will not be executed).
         </p>
       </li>
       <li>
-        <h3>Mistake correction</h3>
-        <p>In normal mode move the cursor before the character that you want delete then press the x key to delete the character.</p>
+        <h3>Deleting</h3>
+        <ol>
+          <li>
+            <h3>Deleting one character</h3>
+            <p>In normal mode move the cursor before the character that you want delete then press the x key to delete the character.</p>
+          </li>
+          <li>
+            <h3>Deleting one word</h3>
+            <p>In normal mode move your cursor in word that you want to delete and execute the "dw" command to delete
+              the word.
+            </p>
+          </li>
+          <li>
+            <h3>Deleting one line</h3>
+            <p>In normal mode move your cursor on line that you want to delete and execute the "dd" command to delete 
+              the line.
+            </p>
+          </li>
+          <li>
+            <h3>Deleting whole document / creating new document</h3>
+            <p>In normal mode execute the "qa" command to delete whole document / create new document.</p>
+          </li>
+        </ol>
       </li>
       <li>
         <h3>Styling the text</h3>
@@ -47,23 +64,20 @@
           </li>
           <li>
           <h3>Changing the text size</h3>
-          <p>Select the text and click on <i class="fa-solid fa-text-height"></i> icon after chosing a text size in the panel next to it
+          <p>Select the text and choose text size in the panel next to this icon <i class="fa-solid fa-text-height"></i>
           or execute the "textsize" command to change size of the selected text.</p>
           </li>
           <li>
           <h3>Changing the font</h3>
-          <p>Select the text and click on <i class="fa-solid fa-font"></i> icon after chosing a font in the panel
-          next to it or execute the "font" command to change font of the selected text.</p>
+          <p>Select the text and choose text size in the panel next to this icon <i class="fa-solid fa-font"></i> or execute the "font" command to change font of the selected text.</p>
           </li>
           <li>
           <h3>Changing the text color</h3>
-          <p>Select the text and click on <i class="fa-solid fa-brush"></i> icon after chosing a color in the panel
-          next to it or execute the "textcolor" command to change color of selected text.</p>
+          <p>Select the text and choose text size in the panel next to this icon <i class="fa-solid fa-brush"></i> or execute the "textcolor" command to change color of selected text.</p>
           </li>
           <li>
           <h3>Highlighting the text</h3>
-          <p>Select the text and click on <i class="fa-solid fa-fill"></i> icon after chosing a color in the panel
-          next to it or execute the "backcolor" command to change color of selected text.</p>
+          <p>Select the text and choose text size in the panel next to this icon <i class="fa-solid fa-fill"></i> or execute the "backcolor" command to change color of selected text.</p>
           </li>
           <li>
           <h3>Aligning the text</h3>
@@ -100,6 +114,28 @@
           unlink the selected hyperlink.</p>
           </li>
         </ol>
+      </li>
+      <li>
+        <h3>Images</h3>
+        <p>Select a source of your image in panel next to <i class="fa-solid fa-image"></i> icon then click on it
+        or execute the "image" command. If you selected the URL as your source put your URL in the prompt. Else
+        select the image file from your computer. Then put the width size of image that you want in the prompt
+        or leave it empty if you want use original or maximal size of the image.
+        </p>
+      </li>
+      <li>
+        <h3>Undo / Redo</h3>
+        <p>Click on <i class="fa-solid fa-rotate-left"></i> icon or use the "CTRL + Z" shortcut to undo last changes.
+        Or click on <i class="fa-solid fa-rotate-right"></i> or use the "CTRL + SHIFT + Z" shortcut to redo last 
+        undo command.</p>
+      </li>
+      <li>
+        <h3>Save / Load</h3>
+        <p>The editor automatically saves the document in your browser and loads it after every reload of the page.
+        But if you want to use documents on your computer click on "Save file" button or execute the "wq" command to save
+        the document. Or click on "Load file" button or execute the "dl" command and select the document from your computer
+        to load the document.
+        </p>
       </li>
     </ol>
   </div>

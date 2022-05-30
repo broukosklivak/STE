@@ -1,3 +1,4 @@
+<!--App.vue jsou zde prakticky všechny věci co jsou na každé stránce stejné-->
 <template>
   <router-view/>
   <Footer />

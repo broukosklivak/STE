@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import TutorView from '../views/TutorView.vue'
 
 const routes = [
   {
@@ -16,11 +15,6 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
-  {
-    path: '/tutor',
-    name: 'tutor',
-    component: TutorView
-  }
 ]
 
 const router = createRouter({
